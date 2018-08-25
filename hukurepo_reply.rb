@@ -38,7 +38,7 @@ client.on :message do |data|
   if data['text'].start_with?("replyto") then
     str = data['text'].match(/replyto\s*(\d+):(.+)/)
     apipost(str[1],str[2])
-    #client.message channel: data['channel'], text: "Problem No.#{str[1]}, Response:#{str[2]}"
+    client.message channel: data['channel'], text: ":+1:", thread_ts: data['thread_ts']
   end
 end
 
