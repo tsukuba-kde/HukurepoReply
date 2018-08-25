@@ -14,6 +14,7 @@ def apipost(problem_id,response)
   res = http.start do |h|
     req = Net::HTTP::Post.new(uri.path)
     req.body = {'comment'=>response}.to_json
+
     req["Authorization"]=HUKUREPO_TOKEN
     req["Content-Type"]="application/json"
     h.request(req)
@@ -35,9 +36,9 @@ end
 
 client.on :message do |data|
   if data['text'].start_with?("replyto") then
-    str = data['text'].match(/replayto\s*(\d+)[,\s](.+)/)
+    str = data['text'].match(/replyto\s*(\d+):(.+)/)
     apipost(str[1],str[2])
-    client.message channel: data['channel'], text: "Problem No.#{str[1]}, Response:#{str[2]}"
+    #client.message channel: data['channel'], text: "Problem No.#{str[1]}, Response:#{str[2]}"
   end
 end
 
