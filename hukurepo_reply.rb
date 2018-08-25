@@ -34,8 +34,8 @@ client.on :hello do
 end
 
 client.on :message do |data|
-  if data['text'].start_with?("problem:") then
-    str = data['text'].match(/problem:(\d+)[,\s](.+)/)
+  if data['text'].start_with?("replyto") then
+    str = data['text'].match(/replayto\s*(\d+)[,\s](.+)/)
     apipost(str[1],str[2])
     client.message channel: data['channel'], text: "Problem No.#{str[1]}, Response:#{str[2]}"
   end
