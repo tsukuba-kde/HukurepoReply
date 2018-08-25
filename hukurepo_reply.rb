@@ -3,7 +3,7 @@ require 'slack-ruby-client'
 require 'net/https'
 require 'json'
 
-SLACK_TOKEN = 'xoxb-420428523623-423792781255-UC95NdaZg2a2IRCHr5xr3m0k'
+SLACK_TOKEN = 'xoxp-420428523623-424061473830-424472809318-3ed26f472a1707ac3721c1370a22f13b'
 HUKUREPO_TOKEN = '1:zxQ84ySsjEVQtRBS7z38'
 
 def apipost(problem_id,response)
@@ -29,18 +29,44 @@ Slack.configure do |config|
     raise 'Missing TOKEN!' unless config.token
 end
 
-client = Slack::RealTime::Client.new
-client.on :hello do
+realtime_client = Slack::RealTime::Client.new
+realtime_client.on :hello do
     puts 'connected!'
 end
 
-client.on :message do |data|
-  if data['text'].start_with?("replyto") then
-    str = data['text'].match(/replyto\s*(\d+):(.+)/)
-    apipost(str[1],str[2])
-    client.message channel: data['channel'], text: ":+1:", thread_ts: data['thread_ts']
+client = Slack::Web::Client.new
+puts client.auth_test
+
+
+realtime_client.on :message do |data|
+  if data.thread_ts then
+    thinfo = client.channels_replies(
+      channel: data['channel'],
+      thread_ts: data['thread_ts']
+    )
+    base_message = thinfo.messages[0].text
+    if md = base_message.match(/\*problem\s*(\d+):.*/) then
+      problem_no = md[1]
+      apipost(problem_no,data['text'])
+      client.reactions_add(
+        name: "thumbsup",
+        channel: data['channel'],
+        timestamp: data['ts']
+      )
+    end
   end
+
+  if data['text'].start_with?("replyto") then
+    str = data['text'].match(/^replyto\s*(\d+):(.+)/)
+    apipost(str[1],str[2])
+    # realtime_client.message channel: data['channel'], text: ":+1:", thread_ts: data['thread_ts']
+    client.reactions_add(
+      name: "thumbsup",
+      channel: data['channel'],
+      timestamp: data['ts']
+    )
+end
 end
 
-client.start!
+realtime_client.start!
 
