@@ -3,8 +3,8 @@ require 'slack-ruby-client'
 require 'net/https'
 require 'json'
 
-SLACK_TOKEN = 'xoxp-420428523623-424061473830-424472809318-3ed26f472a1707ac3721c1370a22f13b'
-HUKUREPO_TOKEN = '1:zxQ84ySsjEVQtRBS7z38'
+SLACK_TOKEN = ENV['HUKUREPO_SLACK_TOKEN']
+HUKUREPO_TOKEN = ENV['HUKUREPO_API_TOKEN']
 
 def apipost(problem_id,response)
   uri = URI.parse("https://bigclout-api.kde.cs.tsukuba.ac.jp/v1/problems/#{problem_id}/responses")
@@ -26,7 +26,7 @@ end
 
 Slack.configure do |config|
     config.token = SLACK_TOKEN
-    raise 'Missing TOKEN!' unless config.token
+    raise 'Missing SLACK TOKEN!' unless config.token
 end
 
 realtime_client = Slack::RealTime::Client.new
