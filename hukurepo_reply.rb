@@ -47,7 +47,7 @@ realtime_client.on :message do |data|
     if md = base_message.match(/\*(problem|reply to)\s*(\d+):.*/) then
       issue_no = md[2]
       puts issue_no
-      #apipost(issue_no,data['text'])
+      apipost(issue_no,data['text'])
       client.reactions_add(
         name: "thumbsup",
         channel: data['channel'],
@@ -58,7 +58,7 @@ realtime_client.on :message do |data|
     begin
       if data['text'].start_with?("replyto") then
         str = data['text'].match(/^replyto\s*(\d+):(.+)/)
-        #apipost(str[1],str[2])
+        apipost(str[1],str[2])
         client.reactions_add(
           name: "thumbsup",
           channel: data['channel'],
