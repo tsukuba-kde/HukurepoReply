@@ -38,4 +38,19 @@ Hukurepoの困りごとにSlackで返信してくれるSlack bot
 * Hukurepoが回答を確認したら、Hukurepo Postから返信が来ます。
 
 ### デプロイ先がHerokuの時の設定方法
-* (後で書く)
+* Procfileがデプロイ先で実行されるコマンドです。確認してください。
+* Herokuの Settings -> Config vars で以下の環境変数を設定してください
+    * HUKUREPO_SLACK_TOKEN
+        * Slack APIのトークン
+    * HUKUREPO_API_TOKEN 
+        * Hukurepo APIのトークン
+* Heroku CLIをインストールして、ログインとデプロイをします
+```
+ % heroku login
+ % git remote add heroku https://git.heroku.com/<アプリ名>.git
+ % git add *
+ % git commit -m "first commit"
+ % git push heroku master
+```
+* pushしたらデプロイ先でビルドされます。エラーが起きないことを確認してください。
+* Overview -> Dyno formationでProcfileに書いたコマンドがOFFになってたらONに変更します。 
